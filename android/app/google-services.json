@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "374126555989",
+    "firebase_url": "https://forestisland.firebaseio.com",
+    "project_id": "forestisland",
+    "storage_bucket": "forestisland.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374126555989:android:0a5d0a058eaeb8088b35dc",
+        "android_client_info": {
+          "package_name": "ru.xpage.mobile.forest_island"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374126555989-0aa9frlua83nfec3i8c2092j0kbhhcb2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLDEGue5c28euf4-A5caL_56E8AAxSawY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374126555989-0aa9frlua83nfec3i8c2092j0kbhhcb2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
