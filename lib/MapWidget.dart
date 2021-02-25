@@ -48,7 +48,6 @@ class Shop {
 
 class MapWidget extends StatelessWidget {
   MapBloc _mapBloc = new MapBloc(
-      isVisible: false,
       shop: ShopInfo(),
       userPosition: Position(latitude: 55.753215, longitude: 37.622504));
   YMaps.YandexMapController controller;
@@ -112,7 +111,7 @@ class MapWidget extends StatelessWidget {
 
                                   _presentBottomSheet(context);
 
-                                  _mapBloc.showToast(shopSnapData.shopAddress,point.latitude, point.longitude);
+                                  _mapBloc.showToast(point.latitude, point.longitude);
                                 },
                                 style: YMaps.PlacemarkStyle(
                                   opacity: 0.95,
@@ -132,7 +131,7 @@ class MapWidget extends StatelessWidget {
 
                                   _presentBottomSheet(context);
 
-                                  _mapBloc.showToast(shopSnapData.shopAddress,point.latitude, point.longitude);
+                                  _mapBloc.showToast(point.latitude, point.longitude);
                                 },
                                 style: YMaps.PlacemarkStyle(
                                   opacity: 0.95,

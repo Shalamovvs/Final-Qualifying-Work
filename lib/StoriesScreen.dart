@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_stories/flutter_stories.dart';
@@ -26,7 +27,7 @@ class Home2 extends StatefulWidget {
 class Home2State extends State<Home2> with SingleTickerProviderStateMixin {
   AnimationController controller;
   StoriesBloc _storiesBloc = new StoriesBloc(
-    isWatched: false,
+    isWatch: false,
   );
 
   Animation base;
@@ -50,15 +51,20 @@ class Home2State extends State<Home2> with SingleTickerProviderStateMixin {
       });
   }
 
-  final _momentCount = 5;
-  final _momentDuration = const Duration(seconds: 5);
+  final _momentCount = 2;
+  final _momentDuration = const Duration(seconds: 50);
 
   @override
   Widget build(BuildContext context) {
-    final images = List.generate(
-      _momentCount,
-      (idx) => Image.asset('assets/images/introduction${idx + 1}.png'),
-    );
+    // final images = List.generate(
+    //   _momentCount,
+    //   (idx) => Image.asset('assets/images/introduction${idx + 1}.png'),
+    // );
+    final List<Image> images = [
+      Image(image: CachedNetworkImageProvider('https://i.ytimg.com/vi/jgSZrAXjnI4/maxresdefault.jpg')),
+      Image.network('https://i.ytimg.com/vi/jgSZrAXjnI4/maxresdefault.jpg'),
+      Image.network('https://mediasole.ru/data/images/225/225541/putin-i-jivotnie11.jpg')
+    ];
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -75,7 +81,7 @@ class Home2State extends State<Home2> with SingleTickerProviderStateMixin {
                     child: Story(
                       onFlashForward: Navigator.of(context).pop,
                       onFlashBack: Navigator.of(context).pop,
-                      momentCount: 5,
+                      momentCount: images.length,
                       momentDurationGetter: (idx) => _momentDuration,
                       momentBuilder: (context, idx) => images[idx],
                     ),
@@ -88,11 +94,12 @@ class Home2State extends State<Home2> with SingleTickerProviderStateMixin {
                   ));
                 },
               );
-              _storiesBloc.changeWatched();
+              // _storiesBloc.changeWatched();
             })
           },
           child: StreamBuilder(
               stream: _storiesBloc.subjectWatchObservable,
+              initialData: false,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 return RotationTransition(
                   turns: base,

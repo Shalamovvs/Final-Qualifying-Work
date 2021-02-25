@@ -38,10 +38,7 @@ class RegistrationFirstPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: Container(
-                        child: Text(
-                            'Введите номер телефона, чтобы получить код авторизации',
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(color: Colors.grey[800])),
+                        child: Text('Введите номер телефона, чтобы получить код авторизации',textAlign: TextAlign.center,style: new TextStyle(color: Colors.grey[800])),
                       ),
                     ),
                     Padding(
@@ -56,8 +53,7 @@ class RegistrationFirstPage extends StatelessWidget {
                           style: TextStyle(color: Colors.grey[700]),
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 1, horizontal: 10),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                               borderSide: BorderSide(
@@ -84,8 +80,7 @@ class RegistrationFirstPage extends StatelessWidget {
                           vertical: 20, horizontal: 8),
                       child: FlatButton(
                         onPressed: () {
-                          fieldText = int.parse(fieldText.replaceAll(
-                              new RegExp(r'[^\w\s]+'), ''));
+                          fieldText = int.parse(fieldText.replaceAll(new RegExp(r'[^\w\s]+'), ''));
                           print(fieldText);
                           Navigator.push( context, PageTransition( type: PageTransitionType.fade, child: RegistrationSecondPage()));
                         },
@@ -93,8 +88,7 @@ class RegistrationFirstPage extends StatelessWidget {
                         disabledColor: Colors.blue[900],
                         textColor: Colors.white,
                         disabledTextColor: Colors.white,
-                        child: Text('Отправить код',
-                            style: new TextStyle(fontSize: 16)),
+                        child: Text('Отправить код',style: new TextStyle(fontSize: 16)),
                       ),
                     )
                   ],
@@ -112,6 +106,8 @@ class RegistrationSecondPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     dynamic fieldText = '';
+    var controller = new MaskedTextController(mask: '0000');
+    dynamic smsCode = '';
     bool isCodeEntered = false;
     final node = FocusScope.of(context);
     return Scaffold(
@@ -145,158 +141,11 @@ class RegistrationSecondPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: Container(
-                        child: Text('Введите код из СМС',
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(color: Colors.grey[800])),
+                        child: Text('Введите код из СМС',textAlign: TextAlign.center,style: new TextStyle(color: Colors.grey[800])),
                       ),
                     ),
                     Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 5),
-                            child: Container(
-                              width: 40,
-                              child: TextField(
-                                autofocus: true,
-                                maxLength: 1,
-                                showCursor: false,
-                                onChanged: (text) {
-                                  fieldText = '$fieldText$text';
-                                  node.nextFocus();
-                                },
-                                style: TextStyle(
-                                    color: Colors.grey[700], fontSize: 30),
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 1, horizontal: 10),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[700],
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[700],
-                                        style: BorderStyle.solid,
-                                      ),
-                                    )),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 5),
-                            child: Container(
-                              width: 40,
-                              child: TextField(
-                                onChanged: (text) {
-                                  fieldText = '$fieldText$text';
-                                  node.nextFocus();
-                                },
-                                maxLength: 1,
-                                showCursor: false,
-                                style: TextStyle(
-                                    color: Colors.grey[700], fontSize: 30),
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 1, horizontal: 10),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[700],
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[700],
-                                        style: BorderStyle.solid,
-                                      ),
-                                    )),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 5),
-                            child: Container(
-                              width: 40,
-                              child: TextField(
-                                onChanged: (text) {
-                                  fieldText = '$fieldText$text';
-                                  node.nextFocus();
-                                },
-                                maxLength: 1,
-                                showCursor: false,
-                                style: TextStyle(
-                                    color: Colors.grey[700], fontSize: 30),
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 1, horizontal: 10),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[700],
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[700],
-                                        style: BorderStyle.solid,
-                                      ),
-                                    )),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 5),
-                            child: Container(
-                              width: 40,
-                              child: TextField(
-                                onChanged: (text) {
-                                  fieldText = '$fieldText$text';
-                                  isCodeEntered = true;
-                                },
-                                maxLength: 1,
-                                showCursor: false,
-                                style: TextStyle(
-                                    color: Colors.grey[700], fontSize: 30),
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 1, horizontal: 10),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[700],
-                                        style: BorderStyle.solid,
-                                      ),
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey[700],
-                                        style: BorderStyle.solid,
-                                      ),
-                                    )),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                      child: Text('s'),
                     ),
                     if (!isCodeEntered)
                       Column(
@@ -475,3 +324,4 @@ class RegistrationThirdPage extends StatelessWidget {
     );
   }
 }
+

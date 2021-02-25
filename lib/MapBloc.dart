@@ -53,30 +53,41 @@ class Response {
 
 class MapBloc {
   ShopInfo shop = ShopInfo();
-  bool isVisible = false;
   Geolocator _geolocator;
   Position userPosition;
+  bool isFavShop = false;
 
-  BehaviorSubject<bool> _subjectVisible;
   BehaviorSubject<ShopInfo> _subjectShop;
   BehaviorSubject<Position> _subjectUserPosition;
+  BehaviorSubject<bool> _subjectIsFavShop;
 
-  MapBloc({this.isVisible, this.shop, this.userPosition}) {
-    _subjectVisible = new BehaviorSubject<bool>.seeded(this.isVisible);
+  MapBloc({this.shop, this.userPosition}) {
     _subjectShop = new BehaviorSubject<ShopInfo>.seeded(this.shop);
-    _subjectUserPosition =
-        new BehaviorSubject<Position>.seeded(this.userPosition);
+    _subjectUserPosition = new BehaviorSubject<Position>.seeded(this.userPosition);
+    _subjectIsFavShop = new BehaviorSubject<bool>.seeded(this.isFavShop);
   }
-  Observable<Position> get subjectUserPosObservable =>
-      _subjectUserPosition.stream;
-  Observable<bool> get isVisibleObservable => _subjectVisible.stream;
+  Observable<Position> get subjectUserPosObservable => _subjectUserPosition.stream;
   Observable<ShopInfo> get subjectShopObservable => _subjectShop.stream;
+  Observable<bool> get subjectIsFavShop => _subjectIsFavShop.stream;
 
-  void showToast(_shopAdddress, _shopPointLat, _shopPointLong) {
+  void showToast(_shopPointLat, _shopPointLong) {
     shop.shopPoint = '$_shopPointLat,$_shopPointLong';
     // print('Нужная точка ${shop.shopPoint}');
     // print('Местоположение пользователя ${userPosition.latitude},${userPosition.longitude}');
     _subjectShop.sink.add(shop);
+  }
+
+  void favShopToast(_isFavShop) {
+    if (_isFavShop) 
+    {
+      isFavShop = false;
+      _subjectIsFavShop.sink.add(isFavShop);
+    }
+    else
+    {
+      isFavShop = true;
+      _subjectIsFavShop.sink.add(isFavShop);
+    }
   }
 
   void checkPermission() {
@@ -102,7 +113,8 @@ class MapBloc {
 
   void updateLocation() async {
     try {
-      Position newPosition = await Geolocator() .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Position newPosition = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       userPosition = newPosition;
       // print(userPosition);
       _subjectUserPosition.sink.add(userPosition);
@@ -146,6 +158,7 @@ class MapBloc {
     final parsed = jsonDecode(response.body) as Map<String, dynamic>;
     Response resp = Response.fromMap(parsed);
     shop.shopAddress = resp.cityName;
+    _subjectShop.sink.add(shop);
   }
 
   // !! ГЕОКОДЕР
@@ -182,8 +195,8 @@ class MapBloc {
   }
 
   void dispose() {
-    _subjectVisible.close();
     _subjectShop.close();
     _subjectUserPosition.close();
+    _subjectIsFavShop.close();
   }
 }

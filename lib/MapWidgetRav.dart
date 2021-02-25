@@ -4,9 +4,11 @@ import 'package:forest_island/MapBloc.dart';
 import 'package:forest_island/MapWidget.dart';
 import 'package:forest_island/MyIntroductionScreen.dart';
 import 'package:forest_island/Registration.dart';
+import 'package:forest_island/ReviewScreen.dart';
 import 'package:forest_island/ShareWidget.dart';
 import 'package:forest_island/ShopList.dart';
 import 'package:forest_island/StoriesScreen.dart';
+import 'package:forest_island/widgets/SearchFieldWidget.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart' as YMaps;
 import 'package:url_launcher/url_launcher.dart';
@@ -32,33 +34,38 @@ class ControlButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: RaisedButton(
-        child: Text(title, textAlign: TextAlign.center),
-        onPressed: onPressed
-      ),
+          child: Text(title, textAlign: TextAlign.center),
+          onPressed: onPressed),
     );
   }
 }
 
-class Shop {
+class Shop { // *Привет класса магазина с полями, потом уберу
   String shopName;
   String shopAddress;
   YMaps.Point shopPosition;
   String shopStartTime;
   String shopEndTime;
+  bool isFavorite;
 
   Shop(
-    {this.shopName,
-    this.shopAddress,
-    this.shopStartTime,
-    this.shopEndTime,
-    this.shopPosition});
+    {
+      this.shopName,
+      this.shopAddress,
+      this.shopStartTime,
+      this.shopEndTime,
+      this.shopPosition,
+      this.isFavorite
+    }
+  );
 }
 
 class MapWidgetRav extends StatelessWidget {
   MapBloc _mapBloc = new MapBloc(
-      isVisible: false,
-      shop: ShopInfo(),
-      userPosition: Position(latitude: 55.753215, longitude: 37.622504));
+    shop: ShopInfo(),
+    userPosition: Position(latitude: 55.753215, longitude: 37.622504),
+
+  );
   YMaps.YandexMapController controller;
 
   @override
@@ -71,7 +78,7 @@ class MapWidgetRav extends StatelessWidget {
           children: <Widget>[
             Container(
               child: Expanded(
-                  child: FutureBuilder(
+                  child: FutureBuilder( // * FutureBuilder для получения иконки магазинов
                 future: _mapBloc.getMarker(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState != ConnectionState.done)
@@ -86,13 +93,15 @@ class MapWidgetRav extends StatelessWidget {
                     shopPosition:YMaps.Point(latitude: 55.159393, longitude: 61.380302),
                     shopStartTime: '09:00',
                     shopEndTime: '20:00',
+                    isFavorite: false
                   );
 
                   Shop testShop2 = new Shop(
                     shopAddress: 'ул Курчатова 22',
-                    shopPosition:YMaps.Point(latitude: 55.150288, longitude: 61.390220),
+                    shopPosition:YMaps.Point(latitude: 55.150288, longitude: 61.390220), // * Тоже потом уберу
                     shopStartTime: '10:00',
                     shopEndTime: '19:00',
+                    isFavorite: true
                   );
 
                   List<Shop> shopList = [
@@ -112,68 +121,58 @@ class MapWidgetRav extends StatelessWidget {
                   return StreamBuilder(
                     stream: Observable.combineLatest2(
                         _mapBloc.subjectShopObservable,
-                        _mapBloc.subjectUserPosObservable, (b1, b2) {
+                        _mapBloc.subjectUserPosObservable, (b1, b2) { // ! StreamBuilder для получения местонахождения пользователя и инфы по магазу
                       userSnapData = b2;
                       shopSnapData = b1;
                     }),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       List<YMaps.Placemark> placemarkArray = [
                         YMaps.Placemark(
-                          point: const YMaps.Point(
-                              latitude: 55.159393, longitude: 61.380302),
+                          point: const YMaps.Point(latitude: 55.159393, longitude: 61.380302),
                           onTap: (YMaps.Point point) {
-                            _mapBloc.parseDaDa(point.latitude, point.longitude);
-                            _mapBloc.updateLocation();
-                            _mapBloc.distanceCount(
-                              userSnapData.latitude,
-                              userSnapData.longitude,
-                              point.latitude,
-                              point.longitude);
+                            _mapBloc.updateLocation(); // * функция получения местоположения пользователя
+                            _mapBloc.distanceCount(userSnapData.latitude,userSnapData.longitude, point.latitude,point.longitude); // * высчитывание расстояние от меня до магазина
+                            _mapBloc.parseDaDa(point.latitude, point.longitude); // * парс дадаты для получения адреса магазина, потом уберу
 
-                            while(shopSnapData.shopAddress = null)
-                            {
-                              
-                            }
+                            _presentBottomSheet(context); // всплывает BottomSheet
 
-                            _presentBottomSheet(context);
-
-                            _mapBloc.showToast(shopSnapData.shopAddress,point.latitude, point.longitude);
+                            _mapBloc.showToast(point.latitude, point.longitude); // ? вроде как бесполезная функция, потом уберу
                           },
-                          style: YMaps.PlacemarkStyle(
+                          style: YMaps.PlacemarkStyle( // * Дизайн иконки магазина на карте
                             opacity: 0.95,
                             zIndex: 1,
-                            scale: 0.2,
+                            scale: 2,
                             rawImageData: tmpSnapData.buffer.asUint8List()
                           ),
                         ),
                         YMaps.Placemark(
                           point: const YMaps.Point(latitude: 55.150288, longitude: 61.390220),
                           onTap: (YMaps.Point point) {
-                            _mapBloc.parseDaDa(55.164639, 61.401215);
                             _mapBloc.updateLocation();
                             _mapBloc.distanceCount(
                               userSnapData.latitude,
                               userSnapData.longitude,
                               point.latitude,
                               point.longitude);
+                            _mapBloc.parseDaDa(point.latitude, point.longitude);
 
                             _presentBottomSheet(context);
 
-                            _mapBloc.showToast(shopSnapData.shopAddress,point.latitude, point.longitude);
+                            _mapBloc.showToast(point.latitude, point.longitude);
                           },
                           style: YMaps.PlacemarkStyle(
-                              opacity: 0.95,
-                              zIndex: 2,
-                              scale: 0.2,
-                              rawImageData: tmpSnapData.buffer.asUint8List()),
+                            opacity: 0.95,
+                            zIndex: 2,
+                            scale: 2,
+                            rawImageData: tmpSnapData.buffer.asUint8List()
+                          ),
                         )
                       ];
 
                       return new Stack(
                         children: <Widget>[
                           YMaps.YandexMap(
-                            onMapCreated: (YMaps.YandexMapController
-                                yandexMapController) async {
+                            onMapCreated: (YMaps.YandexMapController yandexMapController) async { // * Настройки яндекс карты
                               controller = yandexMapController;
                               controller.toggleNightMode(enabled: true);
                               controller.move(
@@ -183,11 +182,11 @@ class MapWidgetRav extends StatelessWidget {
                               );
                             },
                             onMapRendered: () {
-                              _mapBloc.checkPermission();
-                              geolocationDialog(context);
+                              _mapBloc.checkPermission(); // * Проверка, включен ли GPS у пользователя
+                              geolocationDialog(context); // * модальное окно с текстом тип "включи GPS"
                               _mapBloc.updateLocation();
                               placemarkArray.forEach((element) {
-                                controller.addPlacemark(element);
+                                controller.addPlacemark(element); // * Добавление точек на карту
                               });
                             },
                           ),
@@ -195,58 +194,120 @@ class MapWidgetRav extends StatelessWidget {
                               stream: _mapBloc.subjectUserPosObservable,
                               builder: (context, snapshot) {
                                 var tmpSnapShot = snapshot.data;
-                                return Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Container(
-                                    alignment: Alignment.centerRight,
-                                    height: 100,
-                                    width: 40,
-                                    child: Column(
-                                      children: <Widget>[
-                                        FutureBuilder(
-                                          future: _mapBloc.getUserMarker(),
-                                          builder: (context, snapshot) {
-                                            var userPlacemark;
-                                            if (snapshot.connectionState != ConnectionState.done)
-                                              return Container();
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Container(
+                                          alignment: Alignment.centerRight,
+                                          // height: 100,
+                                          width: 40,
+                                          child: Column(
+                                            children: <Widget>[
+                                              FutureBuilder(
+                                                future: _mapBloc.getUserMarker(), // * FutureBuilder для получения картинки для иконки нахождения пользователя
+                                                builder: (context, snapshot) {
+                                                  var userPlacemark;
+                                                  if (snapshot.connectionState != ConnectionState.done)
+                                                    return Container();
 
-                                            return IconButton(
-                                              icon: Icon(Icons.navigation_outlined),
-                                              onPressed: () {
-                                                _mapBloc.updateLocation();
-                                                YMaps.Point userLocation =
-                                                  YMaps.Point(
-                                                    latitude:tmpSnapShot.latitude,
-                                                    longitude:tmpSnapShot.longitude
+                                                  return Container(
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Color(int.parse('#E25C2A'.replaceAll('#', '0xff')))
+                                                    ),
+                                                    child: IconButton(
+                                                      icon: Icon(Icons.navigation_outlined, color: Colors.white),
+                                                      onPressed: () {
+                                                        _mapBloc.updateLocation();
+
+                                                        YMaps.Point userLocation = YMaps.Point(latitude: tmpSnapShot.latitude,longitude:tmpSnapShot.longitude);
+                                                        userPlacemark = YMaps.Placemark(
+                                                          point: userLocation,
+                                                          style: YMaps.PlacemarkStyle(
+                                                            opacity: 0.95,
+                                                            zIndex: 1,
+                                                            scale: 2,
+                                                            rawImageData: snapshot.data.buffer.asUint8List()
+                                                          ),
+                                                        );
+
+                                                        controller.addPlacemark(userPlacemark);
+                                                        controller.move(
+                                                          zoom: 12,
+                                                          animation: YMaps.MapAnimation(),
+                                                          point: userLocation
+                                                        );
+                                                      }
+                                                    ),
                                                   );
-                                                userPlacemark =YMaps.Placemark(
-                                                  point: userLocation,
-                                                  style: YMaps.PlacemarkStyle(
-                                                    opacity: 0.95,
-                                                    zIndex: 1,
-                                                    scale: 0.1,
-                                                    rawImageData: snapshot.data.buffer.asUint8List()
+                                                }
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 5),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Color(int.parse('#E25C2A'.replaceAll('#', '0xff')))
                                                   ),
-                                                );
-                                                controller.addPlacemark(userPlacemark);
-                                                controller.move(
-                                                  zoom: 12,
-                                                  animation: YMaps.MapAnimation(),
-                                                  point: userLocation
-                                                );
-                                              }
-                                            );
-                                          }
+                                                  child: IconButton(
+                                                    icon: Icon(Icons.format_list_bulleted, color: Colors.white), // * функция которая показывает список магазинов
+                                                    onPressed: () {
+                                                      _presentShopList(context, shopList);
+                                                    }
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        IconButton(
-                                          icon: Icon(Icons.format_list_bulleted_sharp),
-                                          onPressed: () {
-                                            _presentShopList(context, shopList);
-                                          }
-                                        )
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                    Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: Container(
+                                        alignment: Alignment.bottomCenter,
+                                        color: Color(int.parse('#E25C2A'.replaceAll('#', '0xff'))),
+                                        width: MediaQuery.of(context).size.width,
+                                        // height: MediaQuery.of(context).size.height * 1 / 7,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                                              child: Container(
+                                                alignment: Alignment.centerLeft,
+                                                child: AutoSizeText('Ближайший к Вам магазин', style: new TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600))
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                                              child: Container(
+                                                child: FlatButton(
+                                                  onPressed: () {
+                                                    _presentShopList(context, shopList);
+                                                  },
+                                                  child: Row(
+                                                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: <Widget>[
+                                                      AutoSizeText('Лесопарковая 8', style: new TextStyle(fontSize: 16, color: Colors.white),  maxLines: 1),
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                                                        child: Icon(Icons.edit,color: Colors.white, size: 17),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 );
                               }
                             )
@@ -255,14 +316,16 @@ class MapWidgetRav extends StatelessWidget {
                     },
                   );
                 },
-              )),
+              )
             ),
-          ]
-        ),
-    ));
-  }
+          ),
+        ]
+      ),
+    )
+  );
+}
 
-  void geolocationDialog(BuildContext context) async {
+  void geolocationDialog(BuildContext context) async { // * модальное окно с текстом тип "включи GPS"
     final Geolocator _geolocator = Geolocator();
     bool enabled = await _geolocator.isLocationServiceEnabled();
     if (enabled) {
@@ -290,7 +353,7 @@ class MapWidgetRav extends StatelessWidget {
     }
   }
 
-  void _presentBottomSheet(BuildContext context) {
+  void _presentBottomSheet(BuildContext context) { // * модальное окно с инфой магазина
     var userSnapData;
     var shopSnapData;
     showModalBottomSheet(
@@ -303,20 +366,21 @@ class MapWidgetRav extends StatelessWidget {
         crossAxisAlignment: WrapCrossAlignment.end,
         children: <Widget>[
           StreamBuilder(
-            stream: Observable.combineLatest2(_mapBloc.subjectShopObservable,
-                _mapBloc.subjectUserPosObservable, (b1, b2) {
+            stream: Observable.combineLatest2(_mapBloc.subjectShopObservable, // инфа с названием магазина и его координатами
+              _mapBloc.subjectUserPosObservable, (b1, b2) {
               userSnapData = b2;
               shopSnapData = b1;
             }),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               return SafeArea(
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 1 / 5,
+                  height: MediaQuery.of(context).size.height * 1 / 7,
                   decoration: BoxDecoration(
                     borderRadius: new BorderRadius.only(
                       topLeft: const Radius.circular(18.0),
-                      topRight: const Radius.circular(18.0)),
-                    color: Colors.orange[800],
+                      topRight: const Radius.circular(18.0)
+                    ),
+                    color: Color(int.parse('#E25C2A'.replaceAll('#', '0xff'))),
                     boxShadow: [
                       BoxShadow(color: Colors.transparent, spreadRadius: 3),
                     ],
@@ -331,18 +395,12 @@ class MapWidgetRav extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             if (shopSnapData.shopAddress == null)
-                              Text('Адрес магазина')
+                              CircularProgressIndicator()
                             else
                               Container(
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.symmetric(horizontal: 12),
-                                child: AutoSizeText('${shopSnapData.shopAddress}',
-                                  style: new TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold
-                                  ),
-                                  maxLines: 1,
-                                ),
+                                child: AutoSizeText('${shopSnapData.shopAddress}',style: new TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white), maxLines: 1),
                               ),
                             if (shopSnapData.shopDistance == null)
                               Text('')
@@ -351,39 +409,38 @@ class MapWidgetRav extends StatelessWidget {
                                 alignment: WrapAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.symmetric( horizontal: 5, vertical: 3),
+                                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                                     child: FlatButton.icon(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                          BorderRadius.circular(9.0),
-                                        side:
-                                          BorderSide(color: Colors.white)
-                                      ),
-                                      onPressed: () {
-                                        launch("https://yandex.ru/maps/?rtext=${userSnapData.latitude},${userSnapData.longitude}~${shopSnapData.shopPoint}&rtt=mt");
-                                      },
-                                      icon: Icon(Icons.room_outlined),
-                                      label: Text('${num.parse(shopSnapData.shopDistance.toStringAsFixed(2))} км', style: new TextStyle(fontSize: 12))
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric( horizontal: 5, vertical: 3),
-                                    child: FlatButton(
-                                      child: Text('Контакты', style: new TextStyle(fontSize: 12)),
                                       shape: RoundedRectangleBorder(
                                         borderRadius:BorderRadius.circular(9.0),
                                         side: BorderSide(color: Colors.white)
                                       ),
+                                      onPressed: () { // при нажатии открывает яндекс карты с маршрутом
+                                        launch("https://yandex.ru/maps/?rtext=${userSnapData.latitude},${userSnapData.longitude}~${shopSnapData.shopPoint}&rtt=mt");
+                                      },
+                                      icon: Icon(Icons.room_outlined , color: Colors.white),
+                                      label: AutoSizeText('${num.parse(shopSnapData.shopDistance.toStringAsFixed(2))} км', style: new TextStyle(fontSize: 14, color: Colors.white), maxLines: 1,)
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                                    child: FlatButton(
+                                      child: AutoSizeText('Контакты', style: new TextStyle(fontSize: 14, color: Colors.white), maxLines: 1),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(9.0),
+                                        side: BorderSide(color: Colors.white)),
                                       onPressed: () {},
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.symmetric( horizontal: 5, vertical: 3),
+                                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                                     child: FlatButton(
-                                      child: Text('09:00 - 20:00', style: new TextStyle(fontSize: 12)),
+                                      child: Text('09:00 - 20:00', style: new TextStyle(fontSize: 14, color: Colors.white), maxLines: 1),
                                       shape: RoundedRectangleBorder(
-                                          borderRadius:BorderRadius.circular(9.0),
-                                          side: BorderSide(color: Colors.white)),
+                                        borderRadius:
+                                          BorderRadius.circular(9.0),
+                                        side:
+                                          BorderSide(color: Colors.white)),
                                       onPressed: () {},
                                     ),
                                   ),
@@ -395,26 +452,20 @@ class MapWidgetRav extends StatelessWidget {
                       Expanded(
                         child: Container(
                           alignment: Alignment.bottomCenter,
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: FlatButton(
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                onPressed: () => {
-                                  Navigator.push(
-                                    context,
-                                    PageTransition(
-                                      type: PageTransitionType.fade,
-                                      child: WorksScreen()
-                                    )
-                                  )
-                                },
-                                child: Text('Выбрать магазин', style: new TextStyle(fontSize: 18),),
-                                disabledTextColor: Colors.white,
-                                color: Colors.orange[700],
-                                disabledColor: Colors.orange[700],
-                              ),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: FlatButton(
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              onPressed: () => {
+                                
+                              },
+                              child: AutoSizeText('Выбрать магазин', style: new TextStyle(fontSize: 18, color: Colors.white), maxLines: 1),
+                              disabledTextColor: Colors.white,
+                              color: Color(int.parse('#E25C2A'.replaceAll('#', '0xff'))),
+                              disabledColor: Color(int.parse('#E25C2A'.replaceAll('#', '0xff'))),
                             ),
                           ),
+                        ),
                       ),
                     ],
                   ),
@@ -427,8 +478,9 @@ class MapWidgetRav extends StatelessWidget {
     );
   }
 
-  void _presentShopList(BuildContext context, shopList) {
+  void _presentShopList(BuildContext context, shopList) { // * Модальное окно с списком магазинов
     showModalBottomSheet(
+        backgroundColor: Color(int.parse('0xFFF5F5F6')),
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),
@@ -438,194 +490,102 @@ class MapWidgetRav extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 15),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 3 / 4,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    itemCount: shopList.length,
-                    itemBuilder: (context, i) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.orange[800],
-                            borderRadius:BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: ListTile(
-                            title: AutoSizeText(shopList[i].shopAddress,style: new TextStyle(fontSize: 18), maxLines: 1),
-                            subtitle: AutoSizeText('${shopList[i].shopStartTime} - ${shopList[i].shopEndTime}',style: new TextStyle(fontSize: 18), maxLines: 1),
-                            trailing: FlatButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                controller.move(
-                                  point: YMaps.Point(latitude: shopList[i].shopPosition.latitude,longitude: shopList[i].shopPosition.longitude)
-                                );
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                  BorderRadius.circular(9.0),
-                                side:
-                                  BorderSide(color: Colors.white)
-                                ),
-                              disabledTextColor: Colors.orange[800],
-                              disabledColor: Colors.white,
-                              child: Text('Показать на карте')
-                            )
-                          ),
-                        ),
-                      );
-                    },
+              child: Column(
+               //crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Container(
+                   //alignment: Alignment.center,
+                   width: MediaQuery.of(context).size.width / 8,
+                   decoration: BoxDecoration(
+                     color: Color(int.parse('#E25C2A'.replaceAll('#', '0xff'))),
+                     border: Border.all(color: Color(int.parse('#E25C2A'.replaceAll('#', '0xff')))),
+                     borderRadius: BorderRadius.all(
+                       Radius.circular(5.0)
+                     ),
+                   ),
+                 ),
+                 Padding(
+                   padding: const EdgeInsets.all(15),
+                   child: Container(
+                     alignment: Alignment.centerLeft,
+                     child: AutoSizeText('Выберите магазин', style: new TextStyle(fontSize: 20,fontWeight: FontWeight.w600),  maxLines: 1),
+                   ),
+                 ),
+                 Container(
+                   child: ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 1 / 16),
+                    child: Container(
+                      child: SearchFieldWidget(Colors.white),
+                    ),
                   ),
-                ),
+                 ),
+                 Container(
+                   color: Colors.white,
+                   height: MediaQuery.of(context).size.height * 3 / 4,
+                   child: Padding(
+                     padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                     child: ListView.builder(
+                       itemCount: shopList.length,
+                       itemBuilder: (context, i) {
+                         return Container(
+                           decoration: BoxDecoration(
+                             border: Border(
+                               top: BorderSide(
+                                 color: Colors.grey[300],
+                                 width: 0.8,
+                               ),
+                             ),
+                           ),
+                           child: GestureDetector(
+                             onTap: () {
+                               Navigator.pop(context);
+                               controller.move(
+                                 point: YMaps.Point(latitude: shopList[i].shopPosition.latitude,longitude: shopList[i].shopPosition.longitude)
+                               );
+                             },
+                             child: StreamBuilder(
+                               stream: _mapBloc.subjectIsFavShop,
+                               initialData: false,
+                               builder: (BuildContext context, AsyncSnapshot snapshot)
+                               {
+                                 return ListTile(
+                                   leading: Transform.translate(
+                                     offset: Offset(-16, 0),
+                                     child: IconButton(
+                                       icon: Icon(Icons.star, color: snapshot.data? Color(int.parse('#E25C2A'.replaceAll('#', '0xff'))) : Colors.grey), 
+                                       iconSize: 30,
+                                       onPressed: () {
+                                         _mapBloc.favShopToast(snapshot.data);
+                                       }
+                                     )
+                                   ),
+                                   title: Transform.translate(
+                                     offset: Offset(-22, 0),
+                                     child: AutoSizeText(shopList[i].shopAddress, style: new TextStyle(fontSize: 14),maxLines: 1)
+                                   ),
+                                   subtitle: Transform.translate(
+                                     offset: Offset(-22, 0),
+                                     child: AutoSizeText('График работы с ${shopList[i].shopStartTime} до ${shopList[i].shopEndTime}',style: new TextStyle(fontSize: 10),maxLines: 1)
+                                   ),
+                                 );
+                               }
+                             ),
+                           ),
+                         );
+                       },
+                     ),
+                   ),
+                 ),
+               ],
               ),
             ),
           ],
         )
       );
-  }
+}
 
   @override
   void dispose() {
     _mapBloc.dispose();
   }
 }
-
-class WorksScreen extends StatelessWidget {
-  const WorksScreen({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: RegistrationFirstPage()));
-                },
-                child: Text('Регистрация')),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: StoriesScreen()));
-                },
-                child: Text('Сторис')),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: MyIntroductionScreen()));
-                },
-                child: Text('Приветствие')),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade, child: ShareWidget()));
-                },
-                child: Text('Шаринг')),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade, child: MapWidget()));
-                },
-                child: Text('Витаминка Карта')),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: CameraScreen()));
-                },
-                child: Text('Считывание штрихкодов')),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-// class ShopSearch extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     MapBloc _mapBloc = new MapBloc(
-//         isVisible: false,
-//         shop: ShopInfo(),
-//         userPosition: Position(latitude: 55.753215, longitude: 37.622504));
-//     dynamic searchField = '';
-//     return Scaffold(
-//       body: Padding(
-//         padding: const EdgeInsets.all(8.0),
-//         child: Container(
-//           width: MediaQuery.of(context).size.width,
-//           height: MediaQuery.of(context).size.height,
-//           child: Column(
-//             children: <Widget>[
-//               StreamBuilder<Object>(
-//                   stream: _mapBloc.subjectSearchPosObservable,
-//                   builder: (context, snapshot) {
-//                     return Container(
-//                       child: TextField(
-//                         onEditingComplete: () {
-//                           print(snapshot.data);
-//                           _mapBloc.searchShop(searchField);
-//                         },
-//                         onChanged: (text) {
-//                           searchField = text;
-//                         },
-//                         decoration: InputDecoration(
-//                           hintText: 'Поиск',
-//                           prefixIcon: IconButton(
-//                             onPressed: () {
-//                               Navigator.pop( context,PageTransition(type: PageTransitionType.fade,child: MapWidgetRav()));
-//                             },
-//                             icon: Icon(Icons.arrow_back),
-//                           ),
-//                         ),
-//                       ),
-//                     );
-//                   }),
-//               Container(
-//                 child: SingleChildScrollView(
-//                   child: Container(),
-//                 ),
-//               )
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

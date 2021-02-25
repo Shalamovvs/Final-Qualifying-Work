@@ -1,24 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:forest_island/AuthScreen.dart';
-import 'package:forest_island/CameraApp.dart';
+import 'package:forest_island/CartScreen.dart';
+import 'package:forest_island/CatalogScreen.dart';
 import 'package:forest_island/ContactsScreen.dart';
 import 'package:forest_island/ListScreen.dart';
-import 'package:forest_island/MapWidgetRav.dart';
-import 'package:forest_island/MyIntroductionScreen.dart';
+import 'package:forest_island/NewsScreen.dart';
 import 'package:forest_island/PersonalScreen.dart';
 import 'package:forest_island/RegistrationScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:forest_island/SearchScreen.dart';
 import 'package:forest_island/SignInPage.dart';
-import 'package:forest_island/StoriesScreen.dart';
-import 'package:forest_island/MapWidget.dart';
-import 'package:forest_island/ShareWidget.dart';
-import 'package:forest_island/ShopList.dart';
-import 'package:forest_island/Registration.dart';
 import 'package:forest_island/authentication_service.dart';
-import 'package:forest_island/PhotoScreen.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
@@ -49,22 +43,22 @@ class MyApp extends StatelessWidget {
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.dark,
+        themeMode: ThemeMode.light,
         darkTheme: ThemeData(
             inputDecorationTheme: const InputDecorationTheme(
               labelStyle: TextStyle(color: Colors.white),
             ),
-            fontFamily: 'Lato',
+            fontFamily: 'Montserrat',
             brightness: Brightness.dark,
             accentColor: Colors.blue),
         theme: ThemeData(
-            inputDecorationTheme: const InputDecorationTheme(
-              labelStyle: TextStyle(color: Colors.black),
-            ),
-            fontFamily: 'Lato',
-            brightness: Brightness.light),
+          inputDecorationTheme: const InputDecorationTheme(
+            labelStyle: TextStyle(color: Colors.black),
+          ),
+          fontFamily: 'Montserrat',
+          brightness: Brightness.light),
         title: 'Welcome to Flutter',
-        home: MapWidgetRav(),
+        home: NewsScreen(),
         routes: {
           '/auth': (BuildContext context) => AuthScreen(),
           '/card': (BuildContext context) => ListScreen(),
