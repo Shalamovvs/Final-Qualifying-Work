@@ -24,6 +24,9 @@ class SearchFieldWidget extends StatelessWidget {
           contentPadding: EdgeInsets.only(left: 15, bottom: 11, top: 15, right: 15),
           hintText: "Поиск"
         ),
+        onChanged: (value) {
+          return value;
+        },
       ),
     );
   }

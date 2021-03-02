@@ -116,7 +116,10 @@ flutter:
     - assets/images/empty_order-history.svg
     - assets/images/empty_cart.svg
     - assets/images/empty_search.svg
-  #   - images/a_dot_ham.jpeg
+    - assets/images/lost_internet.svg
+    - assets/images/test1.png
+    - assets/images/test2.png
+    - assets/images/test3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

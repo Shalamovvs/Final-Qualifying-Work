@@ -38,8 +38,7 @@ class Home2State extends State<Home2> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 3));
+    controller = AnimationController(vsync: this, duration: Duration(seconds: 3));
 
     base = CurvedAnimation(parent: controller, curve: Curves.easeOut);
 

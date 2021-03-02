@@ -1,36 +1,43 @@
-import 'package:flutter/material.dart';
-import 'package:forest_island/widgets/CatalogScrollWidget.dart';
-import 'package:forest_island/widgets/CatalogWidget.dart';
-import 'package:forest_island/widgets/SearchFieldWidget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
+import 'package:forest_island/widgets/CatalogWidget.dart';
+import 'package:forest_island/widgets/CategoryWidget.dart';
+import 'package:forest_island/widgets/SearchFieldWidget.dart';
 import 'package:scroll_app_bar/scroll_app_bar.dart';
 
-class SectionScroll {
-  String sectionTitle;
-  List<Image> itemImage;
-  List<String> itemName;
-  List<int> itemPrice;
+class Category {
+  String categoryTitle;
+  String categoryColor;
+  Image categoryImage;
+  List<String> categoryProduct;
 
-  SectionScroll({
-    this.sectionTitle,
-    this.itemImage,
-    this.itemName,
-    this.itemPrice,
+  Category({
+    this.categoryTitle,
+    this.categoryColor,
+    this.categoryImage,
+    this.categoryProduct
   });
 }
 
-SectionScroll testSection1 = new SectionScroll(
-  sectionTitle: 'Новинки',
-  itemImage: [Image.network('https://im0-tub-ru.yandex.net/i?id=4b91a96853526ec6583dbc85d4ec6e0a&n=13'), Image.network('https://im0-tub-ru.yandex.net/i?id=ed57bec0eaefda6fffa711dff0d7d6e8&n=13')],
-  itemName: ['Филе куриное', 'Сосиски Дубровские'],
-  itemPrice: [200, 250],
+Category testCategory1 = new Category(
+  categoryTitle: 'Дубрава',
+  categoryColor: '#FEF6ED',
+  categoryImage: Image.network('https://spkfood.ru/upload/iblock/11d/11d3b9b58b1ab3484a08fd4c267c32b6.png'),
+  categoryProduct: ['Ветчины', 'Изделия мясные в желе, паштеты, консервы', 'Колбасы варёные', 'Колбасы копчёные сосиски, сардельки, шпикачки']
 );
 
-SectionScroll testSection2 = new SectionScroll(
-  sectionTitle: 'Лучшее предложение',
-  itemImage: [Image.network('https://croc29.ru/image/cache/catalog/fastfood/BLINI_S_VETCHINOJ_I_SIROM00[1]-900x900.png'), Image.network('https://im0-tub-ru.yandex.net/i?id=406880246cbe47c2c686bb37160fa07a&n=13'), Image.network('https://im0-tub-ru.yandex.net/i?id=ab0c6e6c9fc4003e1f345289529a3bea&n=13')],
-  itemName: ['Блинчики с курицей', 'Блинчики с творогом', 'Блинчики с творогом'],
-  itemPrice: [200, 300 , 200],
+Category testCategory2 = new Category(
+  categoryTitle: 'Готовая продукция',
+  categoryColor: '#FDE8E4',
+  categoryImage: Image.network('https://productovich.ru/upload/iblock/927/9271d016cffd7c2213dc29004fef4983.png'),
+  categoryProduct: ['Ветчины', 'Изделия мясные в желе, паштеты, консервы', 'Колбасы варёные', 'Колбасы копчёные сосиски, сардельки, шпикачки']
+);
+
+Category testCategory3 = new Category(
+  categoryTitle: 'Мясо птицы',
+  categoryColor: '#F4EBF7',
+  categoryImage: Image.network('https://keto-recipes.ru/wp-content/uploads/2018/05/chicken.png'),
+  categoryProduct: ['Ветчины', 'Изделия мясные в желе, паштеты, консервы', 'Колбасы варёные', 'Колбасы копчёные сосиски, сардельки, шпикачки']
 );
 
 class CatalogScreen extends StatelessWidget {
@@ -39,7 +46,7 @@ class CatalogScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<SectionScroll> sectionList = [testSection1, testSection2 , testSection2];
+    List<Category> categoryList = [testCategory1,testCategory2,testCategory3,testCategory2,testCategory3,testCategory2,testCategory1,testCategory3,testCategory2,testCategory1];
     return Scaffold(
       appBar: ScrollAppBar(
         materialType: MaterialType.transparency,
@@ -47,38 +54,38 @@ class CatalogScreen extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: 40,
-                maxWidth: 40
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.favorite, 
-                    color: Color(int.parse('#E25C2A'.replaceAll('#', '0xff'))),
-                    size: 17
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: 40,
+                    maxWidth: 40
                   ),
-                  onPressed: () {
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.favorite, 
+                        color: Color(int.parse('#E25C2A'.replaceAll('#', '0xff'))),
+                        size: 17
+                      ),
+                      onPressed: () {
 
-                  },
+                      },
+                    ),
+                  ),
                 ),
-              ),
             ),
-        ),
           ),
         ],
         leading: Center(
@@ -115,17 +122,7 @@ class CatalogScreen extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            AutoSizeText("Лесопарковая 8", style: new TextStyle(fontWeight: FontWeight.w600, color: Colors.black, fontSize: 18), maxLines: 1),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Icon(Icons.edit,color: Colors.grey, size: 17),
-            )
-          ],
-        ),
+        title: AutoSizeText("Каталог", style: new TextStyle(fontWeight: FontWeight.w600, color: Colors.black, fontSize: 18), maxLines: 1),
       ),
       body: Container(
         color: Colors.white,
@@ -137,24 +134,16 @@ class CatalogScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Container(
                   child: SearchFieldWidget(Color(int.parse('#F5F5F6'.replaceAll('#', '0xff')))),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  color: Colors.white,
-                  width:  MediaQuery.of(context).size.width,
-                  child: CatalogWidget()
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(vertical: 15),
                 child: Container(
                   width:  MediaQuery.of(context).size.width,
-                  child: CatalogScrollWidget(sectionList)
+                  child: CategoryWidget(categoryList)
                 ),
               )
             ],

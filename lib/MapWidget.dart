@@ -110,8 +110,6 @@ class MapWidget extends StatelessWidget {
                                     point.longitude);
 
                                   _presentBottomSheet(context);
-
-                                  _mapBloc.showToast(point.latitude, point.longitude);
                                 },
                                 style: YMaps.PlacemarkStyle(
                                   opacity: 0.95,
@@ -130,8 +128,6 @@ class MapWidget extends StatelessWidget {
                                     point.longitude);
 
                                   _presentBottomSheet(context);
-
-                                  _mapBloc.showToast(point.latitude, point.longitude);
                                 },
                                 style: YMaps.PlacemarkStyle(
                                   opacity: 0.95,

@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:geolocator/geolocator.dart';
@@ -30,52 +31,32 @@ class Response {
   }
 }
 
-// !! ГЕОКОДИНГ
-// class AddressResponce {
-//   final String addressName;
-//   final String addressCity;
-//   final String lat;
-//   final String lon;
-//   final String testPos;
-
-//  AddressResponce(
-//       {this.addressName, this.addressCity, this.lat, this.lon, this.testPos});
-
-//   factory AddressResponce.fromList(Map<String, dynamic> map) {
-//     return AddressResponce(
-//       testPos: map['response']['GeoObjectCollection']['featureMember'][0]
-//               ['GeoObject']['Point']["pos"] ??
-//           "",
-//       // lon: map[0]["geo_lon"] ?? "",
-//     );
-//   }
-// }
-
 class MapBloc {
   ShopInfo shop = ShopInfo();
   Geolocator _geolocator;
   Position userPosition;
   bool isFavShop = false;
+  Uint8List shopPlacemark;
+  Uint8List userPlacemark;
 
   BehaviorSubject<ShopInfo> _subjectShop;
   BehaviorSubject<Position> _subjectUserPosition;
   BehaviorSubject<bool> _subjectIsFavShop;
+  BehaviorSubject<Uint8List> _subjectUserPlacemark;
+  BehaviorSubject<Uint8List> _subjectShopPlacemark;
 
   MapBloc({this.shop, this.userPosition}) {
     _subjectShop = new BehaviorSubject<ShopInfo>.seeded(this.shop);
     _subjectUserPosition = new BehaviorSubject<Position>.seeded(this.userPosition);
     _subjectIsFavShop = new BehaviorSubject<bool>.seeded(this.isFavShop);
+    _subjectUserPlacemark = new BehaviorSubject<Uint8List>.seeded(this.userPlacemark);
+    _subjectShopPlacemark = new BehaviorSubject<Uint8List>.seeded(this.shopPlacemark);
   }
   Observable<Position> get subjectUserPosObservable => _subjectUserPosition.stream;
   Observable<ShopInfo> get subjectShopObservable => _subjectShop.stream;
   Observable<bool> get subjectIsFavShop => _subjectIsFavShop.stream;
-
-  void showToast(_shopPointLat, _shopPointLong) {
-    shop.shopPoint = '$_shopPointLat,$_shopPointLong';
-    // print('Нужная точка ${shop.shopPoint}');
-    // print('Местоположение пользователя ${userPosition.latitude},${userPosition.longitude}');
-    _subjectShop.sink.add(shop);
-  }
+  Observable<Uint8List> get subjectUserPlacemark => _subjectUserPlacemark.stream;
+  Observable<Uint8List> get subjectShopPlacemark => _subjectShopPlacemark.stream;
 
   void favShopToast(_isFavShop) {
     if (_isFavShop) 
@@ -161,42 +142,31 @@ class MapBloc {
     _subjectShop.sink.add(shop);
   }
 
-  // !! ГЕОКОДЕР
-  // void searchShop(address) async {
-  //   var response = await http.get('https://geocode-maps.yandex.ru/1.x/?format=json&apikey=ddb34986-bcf5-4a2f-9145-59e2e0fed67d&geocode=Челябинск+$address');
-
-  //   var url = 'https://cleaner.dadata.ru/api/v1/clean/address';
-  //   var data = '[ "Челябинск $address" ]';
-  //   Dio dio = new Dio();
-  //   dio.options.headers['Content-Type'] = 'application/json';
-  //   dio.options.headers['X-Secret'] =
-  //       '1309c2cc44371ed9767ac85ceb0aa6e88be9c136';
-  //   dio.options.headers["Authorization"] =
-  //       "Token 5c6f39c9d25b9aebba8497133e221958ded608b7";
-  //   final response = await dio.post(url, data: data);
-
-  //   AddressResponce resp = AddressResponce.fromList(response.data);
-  //   _subjectSearchPosition.sink.add(searchPosition);
-
-  //   print("Response status: ${response.statusCode}");
-  //   print("Response body: ${response.body}");
-
-  //   final parsed = jsonDecode(response.body) as Map<String, dynamic>;
-  //   AddressResponce resp = AddressResponce.fromList(parsed);
-  //   searchPosition = YMaps.Point(latitude: double.parse(resp.lat), longitude: double.parse(resp.lon));
-  // }
-
   Future<ByteData> getMarker() async {
     return await rootBundle.load('assets/images/ravis-marker.png');
   }
 
-  Future<ByteData> getUserMarker() async {
+  Future<ByteData> getUserMarkerFuture() async {
     return await rootBundle.load('assets/images/user-location.png');
+  }
+
+  getUserMarker() async {
+    ByteData data = await rootBundle.load('assets/images/user-location.png');
+    Uint8List marker = data.buffer.asUint8List();
+    _subjectUserPlacemark.sink.add(marker);
+  }
+
+  getShopMarker() async {
+    ByteData data = await rootBundle.load('assets/images/ravis-marker.png');
+    Uint8List shopMarker = data.buffer.asUint8List();
+    _subjectShopPlacemark.sink.add(shopMarker);
   }
 
   void dispose() {
     _subjectShop.close();
     _subjectUserPosition.close();
     _subjectIsFavShop.close();
+    _subjectUserPlacemark.close();
+    _subjectShopPlacemark.close();
   }
 }
