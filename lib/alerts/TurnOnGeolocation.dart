@@ -26,13 +26,13 @@ void turnOnGeolocationDialog(BuildContext context) async {
                 border: Border(
                   top: BorderSide(
                     width: 1,
-                    color: Color(int.parse('#E25C2A'.replaceAll('#', '0xff')))
+                    color: Colors.green[400]
                   )
                 )
               ),
               width: double.maxFinite,
               child: FlatButton(
-                child: AutoSizeText("Понятно", maxLines: 1, style: new TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(int.parse('#E25C2A'.replaceAll('#', '0xff'))))),
+                child: AutoSizeText("Понятно", maxLines: 1, style: new TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.green[400])),
                 onPressed: () {
                   Navigator.pop(context);
                 },

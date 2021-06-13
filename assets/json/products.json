@@ -1,0 +1,124 @@
+{
+  "data" :[
+    {
+      "id" : 0,
+      "name" : "Sony",
+      "products" : [
+        {
+          "id" : 0,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        },
+        {
+          "id" : 1,
+          "image" : "https://avatars.mds.yandex.net/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 4",
+          "price" : 24000
+        },
+        {
+          "id" : 2,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony DualSense",
+          "price" : 4990
+        }
+      ]
+    },
+    {
+      "id" : 1,
+      "name" : "Комбо",
+      "products" : [
+        {
+          "id" : 0,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        },
+        {
+          "id" : 1,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        },
+        {
+          "id" : 2,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        }
+      ]
+    },
+    {
+      "id" : 2,
+      "name" : "Креветки",
+      "products" : [
+        {
+          "id" : 0,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        },
+        {
+          "id" : 1,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        },
+        {
+          "id" : 2,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        }
+      ]
+    },
+    {
+      "id" : 3,
+      "name" : "Бургеры",
+      "products" : [
+        {
+          "id" : 0,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        },
+        {
+          "id" : 1,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        },
+        {
+          "id" : 2,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        }
+      ]
+    },
+    {
+      "id" : 4,
+      "name" : "Картошка",
+      "products" : [
+        {
+          "id" : 0,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        },
+        {
+          "id" : 1,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        },
+        {
+          "id" : 2,
+          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
+          "name" : "Sony PlayStation 5",
+          "price" : 64990
+        }
+      ]
+    }
+  ]
+}
