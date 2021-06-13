@@ -1,8 +1,8 @@
 {
-  "data" :[
+  "sections" :[
     {
       "id" : 0,
-      "name" : "Sony",
+      "sectionTitle" : "Sony",
       "products" : [
         {
           "id" : 0,
@@ -26,97 +26,73 @@
     },
     {
       "id" : 1,
-      "name" : "Комбо",
+      "sectionTitle" : "XBox",
       "products" : [
         {
           "id" : 0,
           "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
+          "name" : "XBox One",
+          "price" : 49990
         },
         {
           "id" : 1,
           "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
+          "name" : "XBox Series S",
+          "price" : 24990
         },
         {
           "id" : 2,
           "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
+          "name" : "XBoxController",
+          "price" : 2590
         }
       ]
     },
     {
       "id" : 2,
-      "name" : "Креветки",
+      "sectionTitle" : "Nintendo",
       "products" : [
         {
           "id" : 0,
           "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
+          "name" : "Nintendo Swith",
+          "price" : 20000
         },
         {
           "id" : 1,
           "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
-        },
-        {
-          "id" : 2,
-          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
+          "name" : "Nintendo Switch Lite",
+          "price" : 15990
         }
       ]
     },
     {
       "id" : 3,
-      "name" : "Бургеры",
+      "sectionTitle" : "Games",
       "products" : [
         {
           "id" : 0,
           "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
+          "name" : "Grand Theft Auto V (PS4)",
+          "price" : 1990
         },
         {
           "id" : 1,
           "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
+          "name" : "Grand Theft Auto V (XBox)",
+          "price" : 1490
         },
         {
           "id" : 2,
           "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
-        }
-      ]
-    },
-    {
-      "id" : 4,
-      "name" : "Картошка",
-      "products" : [
-        {
-          "id" : 0,
-          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
+          "name" : "Spider-Man (2018)",
+          "price" : 3990
         },
         {
-          "id" : 1,
+          "id" : 3,
           "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
-        },
-        {
-          "id" : 2,
-          "image" : "https://avatars.mds.yandex.net/get-mpic/4080439/img_id3396893556724706605.jpeg/orig",
-          "name" : "Sony PlayStation 5",
-          "price" : 64990
+          "name" : "Sekiro",
+          "price" : 2990
         }
       ]
     }
